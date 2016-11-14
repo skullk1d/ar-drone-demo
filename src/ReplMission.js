@@ -5,6 +5,7 @@ var async = require('async')
 
 module.exports = ReplMission;
 function ReplMission(client, controller, options) {
+	var self = this;
 
 	options = options || {};
 
@@ -90,36 +91,41 @@ ReplMission.prototype.log = function(path) {
 }
 
 ReplMission.prototype.takeoff = function() {
-	return this.pushStep(this._client.takeoff);
+	var self = this;
+	return this.pushStep(function(cb) {
+		self._client.takeoff(cb);
+	});
 }
 
 ReplMission.prototype.land = function() {
-	return this.pushStep(this._client.land);
+	var self = this;
+	return this.pushStep(function(cb) {
+		self._client.land(cb);
+	});
 }
 
 ReplMission.prototype.hover = function(delay) {
 	var self = this;
-
-	return this.pushStep(function(delay, cb) {
+	return this.pushStep(function(cb) {
 		self._control.hover();
 		setTimeout(cb, delay);
 	}, delay);
 }
 
 ReplMission.prototype.wait = function(delay) {
-	var self = this;
-
-	return this.pushStep(function(delay, cb) {
+	return this.pushStep(function(cb) {
 		setTimeout(cb, delay);
 	}, delay);
 }
 
 ReplMission.prototype.task = function(task) {
-	return this._steps.push(task);
+	return this.pushStep(function(cb) {
+		task(cb);
+	});
 }
 
 ReplMission.prototype.taskSync = function(task) {
-	return this._steps.push(function(cb) {
+	return this.pushStep(function(cb) {
 		task();
 		cb();
 	});
@@ -127,54 +133,87 @@ ReplMission.prototype.taskSync = function(task) {
 
 ReplMission.prototype.zero = function() {
 	var self = this;
-	return this.pushStep(function (cb) {
+	return this.pushStep(function(cb) {
 		self._control.zero();
 		cb();
 	});
 }
 
 ReplMission.prototype.go = function(goal) {
-	return this.pushStep(this._control.go, goal);
+	var self = this;
+	return this.pushStep(function(cb) {
+		self._control.go(goal, cb);
+	}, goal);
 }
 
 ReplMission.prototype.forward = function(distance) {
-	return this.pushStep(this._control.forward, distance);
+	var self = this;
+	return this.pushStep(function(cb) {
+		self._control.forward(distance, cb);
+	}, distance);
 }
 
 ReplMission.prototype.backward = function(distance) {
-	return this.pushStep(this._control.backward, distance);
+	var self = this;
+	return this.pushStep(function(cb) {
+		self._control.backward(distance, cb);
+	}, distance);
 }
 
 ReplMission.prototype.left = function(distance) {
-	return this.pushStep(this._control.left, distance);
+	var self = this;
+	return this.pushStep(function(cb) {
+		self._control.left(distance, cb);
+	}, distance);
 }
 
 ReplMission.prototype.right = function(distance) {
-	return this.pushStep(this._control.right, distance);
+	var self = this;
+	return this.pushStep(function(cb) {
+		self._control.right(distance, cb);
+	}, distance);
 }
 
 ReplMission.prototype.up = function(distance) {
-	return this.pushStep(this._control.up, distance);
+	var self = this;
+	return this.pushStep(function(cb) {
+		self._control.up(distance, cb);
+	}, distance);
 }
 
 ReplMission.prototype.down = function(distance) {
-	return this.pushStep(this._control.down, distance);
+	var self = this;
+	return this.pushStep(function(cb) {
+		self._control.down(distance, cb);
+	}, distance);
 }
 
 ReplMission.prototype.cw = function(angle) {
-	return this.pushStep(this._control.cw, angle);
+	var self = this;
+	return this.pushStep(function(cb) {
+		self._control.cw(angle, cb);
+	}, angle);
 }
 
 ReplMission.prototype.ccw = function(angle) {
-	return this.pushStep(this._control.ccw, angle);
+	var self = this;
+	return this.pushStep(function(cb) {
+		self._control.ccw(angle, cb);
+	}, angle);
 }
 
 ReplMission.prototype.altitude = function(altitude) {
-	return this.pushStep(this._control.altitude, altitude);
+	var self = this;
+	return this.pushStep(function(cb) {
+		self._control.altitude(altitude, cb);
+	}, altitude);
 }
 
 ReplMission.prototype.yaw = function(angle) {
-	return this.pushStep(this._control.yaw, angle);
+	var self = this;
+	return this.pushStep(function(cb) {
+		self._control.yaw(angle,cb);
+	}, angle);
 }
 
 // modified step addition

@@ -9,7 +9,7 @@ var ACTIVE_MISSION = 'WaterSensor';
 
 // instantiate chosen mission
 var ActiveMission = require('./missions/' + ACTIVE_MISSION);
-var activeMission = new ActiveMission({ debug: false });
+var activeMission = new ActiveMission();
 
 // begin programmed sequence
 activeMission.startMission();

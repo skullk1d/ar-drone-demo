@@ -5,6 +5,8 @@ var ReplMission = require('../ReplMission');
 var util = require('util');
 
 function WaterSensor(clientOptions) {
+	EventEmitter.call(this);
+
 	this.name = 'Water Sensor';
 
 	// init mission
