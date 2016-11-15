@@ -109,13 +109,13 @@ ReplMission.prototype.hover = function(delay) {
 	return this.pushStep(function(cb) {
 		self._control.hover();
 		setTimeout(cb, delay);
-	}, delay);
+	});
 }
 
 ReplMission.prototype.wait = function(delay) {
 	return this.pushStep(function(cb) {
 		setTimeout(cb, delay);
-	}, delay);
+	});
 }
 
 ReplMission.prototype.task = function(task) {
@@ -143,91 +143,89 @@ ReplMission.prototype.go = function(goal) {
 	var self = this;
 	return this.pushStep(function(cb) {
 		self._control.go(goal, cb);
-	}, goal);
+	});
 }
 
 ReplMission.prototype.forward = function(distance) {
 	var self = this;
 	return this.pushStep(function(cb) {
 		self._control.forward(distance, cb);
-	}, distance);
+	});
 }
 
 ReplMission.prototype.backward = function(distance) {
 	var self = this;
 	return this.pushStep(function(cb) {
 		self._control.backward(distance, cb);
-	}, distance);
+	});
 }
 
 ReplMission.prototype.left = function(distance) {
 	var self = this;
 	return this.pushStep(function(cb) {
 		self._control.left(distance, cb);
-	}, distance);
+	});
 }
 
 ReplMission.prototype.right = function(distance) {
 	var self = this;
 	return this.pushStep(function(cb) {
 		self._control.right(distance, cb);
-	}, distance);
+	});
 }
 
 ReplMission.prototype.up = function(distance) {
 	var self = this;
 	return this.pushStep(function(cb) {
 		self._control.up(distance, cb);
-	}, distance);
+	});
 }
 
 ReplMission.prototype.down = function(distance) {
 	var self = this;
 	return this.pushStep(function(cb) {
 		self._control.down(distance, cb);
-	}, distance);
+	});
 }
 
 ReplMission.prototype.cw = function(angle) {
 	var self = this;
 	return this.pushStep(function(cb) {
 		self._control.cw(angle, cb);
-	}, angle);
+	});
 }
 
 ReplMission.prototype.ccw = function(angle) {
 	var self = this;
 	return this.pushStep(function(cb) {
 		self._control.ccw(angle, cb);
-	}, angle);
+	});
 }
 
 ReplMission.prototype.altitude = function(altitude) {
 	var self = this;
 	return this.pushStep(function(cb) {
 		self._control.altitude(altitude, cb);
-	}, altitude);
+	});
 }
 
 ReplMission.prototype.yaw = function(angle) {
 	var self = this;
 	return this.pushStep(function(cb) {
 		self._control.yaw(angle,cb);
-	}, angle);
+	});
 }
 
 // modified step addition
-ReplMission.prototype.pushStep = function (stepFn, param) {
+ReplMission.prototype.pushStep = function (stepFn) {
 	var self = this;
 
 	this._steps.push(function(cb) {
 		if (self._replReceivedInput) {
 			// repl input, abort mission (end waterfall)
 			cb(new Error('Received repl input, aborting mission.'));
-		} else if (param) {
-			// no repl input, continue
-			stepFn(param, cb);
 		} else {
+			// no repl input, continue
 			stepFn(cb);
 		}
 	});
@@ -243,10 +241,10 @@ ReplMission.prototype.startRepl = function () {
 	// create repl
 	var repl = this._repl = client.createRepl();
 	// assign context to this controller
-	// use 'ctrl' for autonomy and 'client' for ardrone
-	// to give commands to drone on command line via ctrl.<some autonomy Controller class method such as 'hover'>
+	// use 'control' for autonomy controller commands and 'client' for ardrone client commands
+	// to give commands to drone on command line via control.<some autonomy Controller class method such as 'hover'>
 	// or via client.<some ardrone-node Client class method such as 'land'>
-	repl._repl.context['ctrl'] = control;
+	repl._repl.context['control'] = control;
 	repl._repl.context['client'] = client;
 };
 

@@ -16,9 +16,7 @@ function WaterSensor(clientOptions) {
 
 	// TEST: simple hover delay to check repl abort functionality
 	this.mission.takeoff()
-		.zero()		// sets current state as reference / current position as origin
-		.altitude(1)  // climb altitude (meters)
-		.hover(4000)
+		.wait(4000)
 		.land();
 
 	// define mission actions
@@ -42,11 +40,12 @@ WaterSensor.prototype.startMission = function () {
 
 	console.log('Starting mission ' + this.name);
 
+	var mission = this.mission;
+
 	// run with error handling
-	this.mission.run(function (err, result) {
+	mission.run(function (err, result) {
 		if (err) {
-			mission.client().stop();
-			mission.client().land();
+			self.endMission();
 
 			console.log("Oops, something bad happened: %s", err.message);
 
@@ -61,11 +60,12 @@ WaterSensor.prototype.startMission = function () {
 	});
 };
 
-/* WaterSensor.prototype.endMission = function (data) {
+ WaterSensor.prototype.endMission = function () {
 	// end mission immediately
+	this.mission.client().stop();
+	this.mission.client().land();
 
-	// emit with ctrl data from repl, if needed
-	this.emit('end', data);
-}; */
+	this.emit('end');
+};
 
 module.exports = WaterSensor;
