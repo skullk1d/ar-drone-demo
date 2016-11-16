@@ -21,12 +21,13 @@ WaterSensor.prototype.startMission = function () {
 	// mission sequence here
 	client.ftrim();
 	client.takeoff();
- 	client.after(8000, function() {
+ 	client.after(6000, function() {
+ 		this.up(0.5);
+ 	});
+ 	client.after(2000, function() {
  		this.stop(); // hover in auto-pilot
  		this.land();
  	});
-
- 	// process.exit(0); // exit node (remove if want to keep node running after mission)
 };
 
  WaterSensor.prototype.endMission = function () {
